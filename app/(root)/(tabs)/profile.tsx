@@ -1,11 +1,19 @@
 import { useUser } from "@clerk/clerk-expo";
+import { useState } from "react";
 import { Image, ScrollView, Text, View } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
+
 
 import InputField from "@/components/InputField";
 
 const Profile = () => {
   const { user } = useUser();
+  const [isEditMode, setIsEditMode] = useState(false);
+
+  const handleEditPress = () => {
+    setIsEditMode(!isEditMode);
+  };
 
   return (
     <SafeAreaView className="flex-1">
@@ -58,8 +66,11 @@ const Profile = () => {
               placeholder={user?.primaryPhoneNumber?.phoneNumber || "Not Found"}
               containerStyle="w-full"
               inputStyle="p-3.5"
-              editable={false}
+              editable={true}
             />
+
+            <Text className="text-lg font-JakartaSemiBold mb-3 underline-offset-0">Earnings</Text>
+            <Text className="text-lg font-JakartaSemiBold mb-3 underline-offset-0">Wallet</Text>
           </View>
         </View>
       </ScrollView>
