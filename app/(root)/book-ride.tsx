@@ -1,9 +1,12 @@
+import { router } from "expo-router";
+
 import { useUser } from "@clerk/clerk-expo";
 import { StripeProvider } from "@stripe/stripe-react-native";
 import { Image, Text, View } from "react-native";
 
 import Payment from "@/components/Payment";
 import RideLayout from "@/components/RideLayout";
+import CustomButton from "@/components/CustomButton";
 import { icons } from "@/constants";
 import { formatTime } from "@/lib/utils";
 import { useDriverStore, useLocationStore } from "@/store";
@@ -14,7 +17,7 @@ const BookRide = () => {
   const { drivers, selectedDriver } = useDriverStore();
 
   const driverDetails = drivers?.filter(
-    (driver) => +driver.id === selectedDriver,
+    (driver) => +driver.id === selectedDriver
   )[0];
 
   return (
@@ -92,12 +95,16 @@ const BookRide = () => {
             </View>
           </View>
 
-          <Payment
+          {/* <Payment
             fullName={user?.fullName!}
             email={user?.emailAddresses[0].emailAddress!}
             amount={driverDetails?.price!}
             driverId={driverDetails?.id}
             rideTime={driverDetails?.time!}
+          /> */}
+          <CustomButton
+            title="Finish"
+            onPress={() => router.push("/(root)/ride-mode")}
           />
         </>
       </RideLayout>

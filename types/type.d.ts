@@ -137,3 +137,25 @@ declare interface DriverCardProps {
   selected: number;
   setSelected: () => void;
 }
+
+interface CarCategory {
+  id: number;
+  name: string;
+  maxPassengers: number;
+  engineCapacity: number;
+}
+
+declare interface CategoryCardProps {
+  category: CarCategory;
+  selected: number;
+  setSelected: () => void;
+}
+
+// Define the structure of the store
+interface CategoryStore {
+  categories: CarCategory[]; // Array to store all categories
+  selectedCategory: number | null; // Selected category
+  setSelectedCategory: (categoryId: number) => void; // Function to set selected category
+  setCategories: (categories: CarCategory[]) => void; // Function to set all categories
+  clearSelectedCategory: () => void; // Function to clear the selected category
+}

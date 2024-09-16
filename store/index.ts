@@ -1,6 +1,12 @@
 import { create } from "zustand";
 
-import { DriverStore, LocationStore, MarkerData } from "@/types/type";
+import {
+  DriverStore,
+  LocationStore,
+  MarkerData,
+  CategoryStore,
+  CarCategory
+} from "@/types/type";
 
 export const useLocationStore = create<LocationStore>((set) => ({
   userLatitude: null,
@@ -57,4 +63,22 @@ export const useDriverStore = create<DriverStore>((set) => ({
     set(() => ({ selectedDriver: driverId })),
   setDrivers: (drivers: MarkerData[]) => set(() => ({ drivers })),
   clearSelectedDriver: () => set(() => ({ selectedDriver: null })),
+}));
+
+export const useCategoryStore = create<CategoryStore>((set) => ({
+  categories: [], // Initial categories array
+  selectedCategory: null, // Initially, no category is selected
+
+  // Function to set the selected category by ID
+  setSelectedCategory: (categoryId: number) =>
+    set((state) => ({
+      selectedCategory:
+        state.categories.find((category) => category.id === categoryId) || null,
+    })),
+
+  // Function to set the categories array
+  setCategories: (categories: CarCategory[]) => set(() => ({ categories })),
+
+  // Function to clear the selected category
+  clearSelectedCategory: () => set(() => ({ selectedCategory: null })),
 }));
