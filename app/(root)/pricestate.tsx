@@ -7,7 +7,7 @@ import RideLayout from "@/components/RideLayout";
 import { useCategoryStore } from "@/store";
 
 const PriceStatement = () => {
-  const { categories, selectedCategory, setSelectedCategory } =
+  const { categories, selectedCategory, setCategories,setSelectedCategory } =
     useCategoryStore();
   let carCategories = [
     { id: 1, name: "Economy", maxPassengers: 3, engineCapacity: 650 },
@@ -21,21 +21,23 @@ const PriceStatement = () => {
     },
     { id: 5, name: "XL", maxPassengers: 7, engineCapacity: 1500 },
   ];
+  setCategories(carCategories)
 
   return (
     <RideLayout title="Price Statement">
+      <Text>Category :{selectedCategory?.toString()}</Text>
       <FlatList
-        data={carCategories}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
+        data={categories}
+        keyExtractor={(item, index) => index.toString()}
+        renderItem={({ item, index }) => (
           <CategoryCard
             category={item}
-            selected={selectedCategory!} // Check if the category is selected
-            setSelected={() => setSelectedCategory(item.id!)} // Update the selected category
+            selected={selectedCategory === item.id} // Check if the category is selected
+            setSelected={() => setSelectedCategory(item.id)} // Update the selected category
           />
         )}
         ListFooterComponent={() => (
-          <View>
+          <View className="border">
             <CustomButton
               title="Request Ride"
               onPress={() => router.push("/(root)/payment")}

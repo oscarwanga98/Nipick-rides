@@ -147,15 +147,59 @@ interface CarCategory {
 
 declare interface CategoryCardProps {
   category: CarCategory;
-  selected: number;
+  selected: boolean;
   setSelected: () => void;
 }
 
 // Define the structure of the store
-interface CategoryStore {
+declare interface CategoryStore {
   categories: CarCategory[]; // Array to store all categories
   selectedCategory: number | null; // Selected category
   setSelectedCategory: (categoryId: number) => void; // Function to set selected category
   setCategories: (categories: CarCategory[]) => void; // Function to set all categories
   clearSelectedCategory: () => void; // Function to clear the selected category
+}
+
+declare interface CarCategory {
+  id: number;
+  name: string;
+  maxPassengers: number;
+  engineCapacity: number;
+}
+
+// Define the Zustand store for car categories
+declare interface CarCategoryStore {
+  categories: CarCategory[]; // Array of car categories
+  selectedCategory: CarCategory | null; // Currently selected category
+  setCategories: (categories: CarCategory[]) => void; // Function to set categories
+  setSelectedCategory: (category: CarCategory) => void; // Function to set the selected category
+  clearSelectedCategory: () => void; // Function to clear selected category
+  selectCategory: (categoryId: number) => void; // New function to select a category by ID // Function to set the selected category
+}
+
+// Define the props interface for the CategoryCard2 component
+declare interface CategoryCard2Props {
+  item: CarCategory; // The category item (type of car)
+  setSelected: () => void; // Function to set the selected category
+  selected: boolean; // Whether the current category is selected or not
+}
+
+declare interface PaymentMethod {
+  id: number;
+  name: string;
+  description: string;
+  icon: any;
+}
+
+declare interface PaymentMethodStore {
+  paymentMethods: PaymentMethod[]; // Array of payment methods
+  selectedPaymentMethod: PaymentMethod | null; // Currently selected payment method
+  setPaymentMethods: (methods: PaymentMethod[]) => void; // Function to set the payment methods
+  selectPaymentMethod: (method: PaymentMethod) => void; // Function to set selected payment method
+  clearSelectedPaymentMethod: () => void; // Function to clear selected payment method
+}
+interface PaymentCardProps {
+  PaymentMethod: PaymentMethod; // The payment method object passed to the card
+  selected: boolean; // Whether this payment method is selected
+  setPaymentMethods: () => void; // Function to set the selected payment method
 }

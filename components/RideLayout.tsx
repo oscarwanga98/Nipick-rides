@@ -1,4 +1,4 @@
-import BottomSheet, { BottomSheetView} from "@gorhom/bottom-sheet";
+import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
 import { router } from "expo-router";
 import React, { useRef } from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
@@ -62,7 +62,7 @@ const RideLayout = ({
               }}
             >
               {children}
-            </BottomSheetView> 
+            </BottomSheetView>
           )}
         </BottomSheet>
       </View>
