@@ -35,7 +35,7 @@ const Payment = ({
     await initializePaymentSheet();
 
     const { error } = await presentPaymentSheet();
-
+ 
     if (error) {
       Alert.alert(`Error code: ${error.code}`, error.message);
     } else {

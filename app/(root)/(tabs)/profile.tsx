@@ -1,11 +1,45 @@
 import { useUser } from "@clerk/clerk-expo";
+import { useState } from "react";
 import { Image, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import CustomButton from "@/components/CustomButton";
 import InputField from "@/components/InputField";
 
 const Profile = () => {
   const { user } = useUser();
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [phoneNumber, setPhoneNumber] = useState(
+    user?.primaryPhoneNumber?.phoneNumber || ""
+  );
+
+  const handleEditPress = async () => {
+    const clerkId= user?.id
+    if (isEditMode) {
+      // Save the new phone number
+      try {
+        const response = await fetch("/(api)/user", {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ clerkId, phoneNumber }),
+        });
+
+        if (!response.ok) {
+          throw new Error(`Error updating phone number: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log(`Phone number updated successfully: ${data.data}`);
+        setIsEditMode(!isEditMode);
+      } catch (error) {
+        console.error(`Error updating phone number: ${error}`);
+      }
+    }
+    // Toggle between edit and view mode
+    setIsEditMode(!isEditMode);
+  };
 
   return (
     <SafeAreaView className="flex-1">
@@ -21,7 +55,7 @@ const Profile = () => {
               uri: user?.externalAccounts[0]?.imageUrl ?? user?.imageUrl,
             }}
             style={{ width: 110, height: 110, borderRadius: 110 / 2 }}
-            className=" rounded-full h-[110px] w-[110px] border-[3px] border-white shadow-sm shadow-neutral-300"
+            className="rounded-full h-[110px] w-[110px] border-[3px] border-white shadow-sm shadow-neutral-300"
           />
         </View>
 
@@ -55,11 +89,23 @@ const Profile = () => {
 
             <InputField
               label="Phone"
-              placeholder={user?.primaryPhoneNumber?.phoneNumber || "Not Found"}
+              placeholder={phoneNumber}
               containerStyle="w-full"
               inputStyle="p-3.5"
-              editable={false}
+              editable={isEditMode}
+              value={phoneNumber}
+              onChangeText={(value) => setPhoneNumber(value)}
+              textContentType="telephoneNumber"
             />
+
+            <View className="flex w-full pt-3 pb-3 justify-center ">
+              <CustomButton
+                title={isEditMode ? "Save" : "Edit"}
+                className="w-20 items-center"
+                onPress={handleEditPress}
+              />
+            </View>
+            <Text>"{user.id}"</Text>
           </View>
         </View>
       </ScrollView>

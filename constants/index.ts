@@ -5,6 +5,9 @@ import chat from "@/assets/icons/chat.png";
 import checkmark from "@/assets/icons/check.png";
 import close from "@/assets/icons/close.png";
 import dollar from "@/assets/icons/dollar.png";
+import economy from "@/assets/icons/economy.png";
+import economyPlus from "@/assets/icons/economyPlus.png";
+import edit from "@/assets/icons/edit.png";
 import email from "@/assets/icons/email.png";
 import eyecross from "@/assets/icons/eyecross.png";
 import google from "@/assets/icons/google.png";
@@ -13,6 +16,8 @@ import list from "@/assets/icons/list.png";
 import lock from "@/assets/icons/lock.png";
 import map from "@/assets/icons/map.png";
 import marker from "@/assets/icons/marker.png";
+import motobike from "@/assets/icons/motorbike.png";
+import mpesa from "@/assets/icons/mpesa.png";
 import out from "@/assets/icons/out.png";
 import person from "@/assets/icons/person.png";
 import pin from "@/assets/icons/pin.png";
@@ -23,6 +28,8 @@ import selectedMarker from "@/assets/icons/selected-marker.png";
 import star from "@/assets/icons/star.png";
 import target from "@/assets/icons/target.png";
 import to from "@/assets/icons/to.png";
+import visa from "@/assets/icons/visa2.png";
+import xl from "@/assets/icons/xl.png";
 import check from "@/assets/images/check.png";
 import getStarted from "@/assets/images/get-started.png";
 import message from "@/assets/images/message.png";
@@ -31,6 +38,7 @@ import onboarding1 from "@/assets/images/onboarding1.png";
 import onboarding2 from "@/assets/images/onboarding2.png";
 import onboarding3 from "@/assets/images/onboarding3.png";
 import signUpCar from "@/assets/images/signup-car.png";
+
 
 export const images = {
   onboarding1,
@@ -44,6 +52,7 @@ export const images = {
 };
 
 export const icons = {
+  edit,
   arrowDown,
   arrowUp,
   backArrow,
@@ -51,6 +60,8 @@ export const icons = {
   checkmark,
   close,
   dollar,
+  economy,
+  economyPlus,
   email,
   eyecross,
   google,
@@ -59,6 +70,8 @@ export const icons = {
   lock,
   map,
   marker,
+  motobike,
+  mpesa,
   out,
   person,
   pin,
@@ -69,6 +82,8 @@ export const icons = {
   star,
   target,
   to,
+  visa,
+  xl
 };
 
 export const onboarding = [

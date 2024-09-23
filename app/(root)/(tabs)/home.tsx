@@ -35,7 +35,7 @@ const Home = () => {
   const [hasPermission, setHasPermission] = useState<boolean>(false);
 
   const {
-    data: recentRides,
+    data: recentRides, 
     loading,
     error,
   } = useFetch<Ride[]>(`/(api)/ride/${user?.id}`);
@@ -125,7 +125,7 @@ const Home = () => {
               <Text className="text-xl font-JakartaBold mt-5 mb-3">
                 Your current location
               </Text>
-              <View className="flex flex-row items-center bg-transparent h-[300px]">
+              <View className="flex flex-row items-center bg-transparent h-[450px]">
                 <Map />
               </View>
             </>
