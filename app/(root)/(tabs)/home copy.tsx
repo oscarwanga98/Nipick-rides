@@ -25,12 +25,7 @@ import axios from "axios";
 const Home = () => {
   const { user } = useUser();
   const { signOut, userId } = useAuth();
-  const {
-    setUserLocation,
-    setDestinationLocation,
-    userLatitude,
-    userLongitude,
-  } = useLocationStore();
+  const { setUserLocation, setDestinationLocation, userLatitude, userLongitude } = useLocationStore();
   const { setDrivers, clearDrivers } = useDriverPinStore();
 
   const handleSignOut = () => {
@@ -40,11 +35,7 @@ const Home = () => {
 
   const [hasPermission, setHasPermission] = useState<boolean>(false);
 
-  const {
-    data: recentRides,
-    loading,
-    error,
-  } = useFetch<Ride[]>(`/(api)/ride/${user?.id}`);
+  const { data: recentRides, loading, error } = useFetch<Ride[]>(`/(api)/ride/${user?.id}`);
 
   // Request location permissions and fetch user's current location
   useEffect(() => {
@@ -70,33 +61,13 @@ const Home = () => {
       // Fetch nearby drivers once user location is available
       if (location.coords.latitude && location.coords.longitude) {
         try {
-          console.log("begin the call");
           const response = await axios.get(
             `http://localhost:3000/nearby-drivers?latitude=${location.coords.latitude}&longitude=${location.coords.longitude}`
           );
           const driversData = response.data;
-          console.log(driversData)
           setDrivers(driversData);
         } catch (error) {
           console.error("Failed to fetch nearby drivers:", error);
-          setDrivers([
-            {
-              driverId: "user_2mEL1X6fT0ThIV60UNSEo4Rapaf",
-              location: {
-                h3Index: "897a6e422c7ffff",
-                latitude: -1.2709027,
-                longitude: 36.8925431,
-              },
-            },
-            {
-              driverId: "user_2mKgwoeCAE2J8IiD3I5DjGX4FrP",
-              location: {
-                h3Index: "897a6e422c7ffff",
-                latitude: -1.2708756,
-                longitude: 36.8925099,
-              },
-            },
-          ]);
         }
       }
     })();

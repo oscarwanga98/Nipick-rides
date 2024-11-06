@@ -16,12 +16,14 @@ export async function POST(request: Request) {
       INSERT INTO users (
         name, 
         email, 
-        clerk_id
+        clerk_id,
+        role
       ) 
       VALUES (
         ${name}, 
         ${email},
-        ${clerkId}
+        ${clerkId},
+        'rider'
      );`;
 
     return new Response(JSON.stringify({ data: response }), {

@@ -6,6 +6,7 @@ import { icons } from "@/constants";
 import CustomButton from "@/components/CustomButton";
 import PaymentCard from "@/components/PaymentCard";
 import RideLayout from "@/components/RideLayout";
+import LocationUpdater from "@/components/LocationUpdater";
 import { usePaymentMethodStore } from "@/store";
 
 const paymentMethods = [

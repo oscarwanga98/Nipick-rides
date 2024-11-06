@@ -28,7 +28,6 @@ const FindRide = () => {
           handlePress={(location) => setUserLocation(location)}
         />
       </View>
-
       <View className="my-3">
         <Text className="text-lg font-JakartaSemiBold mb-3">To</Text>
 
@@ -40,7 +39,6 @@ const FindRide = () => {
           handlePress={(location) => setDestinationLocation(location)}
         />
       </View>
-
       <CustomButton
         title="Find Now"
         onPress={() => router.push(`/(root)/pricestate2`)}

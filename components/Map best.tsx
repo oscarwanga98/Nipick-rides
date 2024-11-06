@@ -10,7 +10,7 @@ import {
   calculateRegion,
   generateMarkersFromData,
 } from "@/lib/map";
-import { useDriverStore, useLocationStore, useDriverPinStore } from "@/store";
+import { useDriverStore, useLocationStore } from "@/store";
 import { Driver, MarkerData } from "@/types/type";
 
 const directionsAPI = process.env.EXPO_PUBLIC_DIRECTIONS_API_KEY;
@@ -23,9 +23,8 @@ const Map = () => {
     destinationLongitude,
   } = useLocationStore();
   const { selectedDriver, setDrivers } = useDriverStore();
-  const { drivers } = useDriverPinStore();
 
-  // const { data: drivers, loading, error } = useFetch<Driver[]>("/(api)/driver");
+  const { data: drivers, loading, error } = useFetch<Driver[]>("/(api)/driver");
   const [markers, setMarkers] = useState<MarkerData[]>([]);
 
   useEffect(() => {
@@ -66,21 +65,20 @@ const Map = () => {
     destinationLatitude,
     destinationLongitude,
   });
-  
 
-  // if (loading || (!userLatitude && !userLongitude))
-  //   return (
-  //     <View className="flex justify-between items-center w-full">
-  //       <ActivityIndicator size="small" color="#000" />
-  //     </View>
-  //   );
+  if (loading || (!userLatitude && !userLongitude))
+    return (
+      <View className="flex justify-between items-center w-full">
+        <ActivityIndicator size="small" color="#000" />
+      </View>
+    );
 
-  // if (error)
-  //   return (
-  //     <View className="flex justify-between items-center w-full">
-  //       <Text>Error: {error}</Text>
-  //     </View>
-  //   );
+  if (error)
+    return (
+      <View className="flex justify-between items-center w-full">
+        <Text>Error: {error}</Text>
+      </View>
+    );
 
   return (
     <MapView
@@ -89,12 +87,11 @@ const Map = () => {
       tintColor="black"
       mapType="mutedStandard"
       showsPointsOfInterest={false}
-      // initialRegion={region}
       initialRegion={region}
       showsUserLocation={true}
       userInterfaceStyle="light"
     >
-      {/* {markers.map((marker, index) => (
+      {markers.map((marker, index) => (
         <Marker
           key={marker.id}
           coordinate={{
@@ -105,17 +102,6 @@ const Map = () => {
           image={
             selectedDriver === +marker.id ? icons.selectedMarker : icons.marker
           }
-        />
-      ))} */}
-      {drivers.map((driver) => (
-        <Marker
-          key={driver.driverId}
-          coordinate={{
-            latitude: driver.location.latitude,
-            longitude: driver.location.longitude,
-          }}
-          title={`Driver ${driver.driverId}`} // Customize the title as needed
-          image={icons.marker}
         />
       ))}
 

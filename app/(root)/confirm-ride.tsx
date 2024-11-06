@@ -10,6 +10,7 @@ const ConfirmRide = () => {
 
   return (
     <RideLayout title={"Choose a Rider"} snapPoints={["85%", "40%", "15%"]}>
+      <Text>hapa</Text>
       <FlatList
         data={drivers}
         keyExtractor={(item, index) => index.toString()}

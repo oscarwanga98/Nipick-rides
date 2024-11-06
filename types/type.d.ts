@@ -8,6 +8,8 @@ declare interface Driver {
   car_image_url: string;
   car_seats: number;
   rating: number;
+  longitude: number | null;
+  latitude: number | null;
 }
 
 declare interface MarkerData {
@@ -97,31 +99,36 @@ declare interface PaymentProps {
   rideTime: number;
 }
 
-declare interface LocationStore {
+interface LocationStore {
   userLatitude: number | null;
   userLongitude: number | null;
   userAddress: string | null;
   destinationLatitude: number | null;
   destinationLongitude: number | null;
   destinationAddress: string | null;
-  setUserLocation: ({
-    latitude,
-    longitude,
-    address,
-  }: {
+  driverLatitude: number | null;
+  driverLongitude: number | null;
+  driverAddress: string | null;
+
+  setUserLocation: (location: {
     latitude: number;
     longitude: number;
     address: string;
   }) => void;
-  setDestinationLocation: ({
-    latitude,
-    longitude,
-    address,
-  }: {
+
+  setDestinationLocation: (location: {
     latitude: number;
     longitude: number;
     address: string;
   }) => void;
+
+  setDriverLocation: (location: {
+    latitude: number;
+    longitude: number;
+    address: string;
+  }) => void;
+
+  clearDriverLocation: () => void;
 }
 
 declare interface DriverStore {
@@ -138,7 +145,7 @@ declare interface DriverCardProps {
   setSelected: () => void;
 }
 
-interface CarCategory {
+declare interface CarCategory {
   id: number;
   name: string;
   maxPassengers: number;
@@ -161,10 +168,11 @@ declare interface CategoryStore {
 }
 
 declare interface CarCategory {
-  id: number;
+  category: string;
   name: string;
   maxPassengers: number;
   engineCapacity: number;
+  price: string;
 }
 
 // Define the Zustand store for car categories
@@ -198,8 +206,108 @@ declare interface PaymentMethodStore {
   selectPaymentMethod: (method: PaymentMethod) => void; // Function to set selected payment method
   clearSelectedPaymentMethod: () => void; // Function to clear selected payment method
 }
-interface PaymentCardProps {
+declare interface PaymentCardProps {
   PaymentMethod: PaymentMethod; // The payment method object passed to the card
   selected: boolean; // Whether this payment method is selected
   setPaymentMethods: () => void; // Function to set the selected payment method
+}
+
+declare interface NearDriverStore {
+  driverIds: number[]; // Array of driver IDs
+  addDriverIds: (ids: number[]) => void; // Add multiple driver IDs
+  setDriverIds: (ids: number[]) => void; // Set the entire array of driver IDs
+  removeDriverId: (id: number) => void; // Remove a driver ID
+  clearDriverIds: () => void; // Clear all driver IDs
+}
+declare interface SelectedDriverDetails {
+  car_image_url: string;
+  car_seats: number;
+  clerk_id: string;
+  first_name: string;
+  id: number;
+  last_name: string;
+  profile_image_url: string;
+  rating: string;
+}
+
+declare interface SelectedDriverDetailsStore {
+  selectedDriverDetails: SelectedDriverDetails | null;
+  setSelectedDriverDetails: (driverDetails: SelectedDriverDetails) => void;
+  clearSelectedDriverDetails: () => void;
+}
+declare interface RideStatusState {
+  isWaitingForRide: boolean;
+  setWaitingForRide: (waiting: boolean) => void;
+
+  isRideStarted: boolean;
+  setRideStarted: (started: boolean) => void;
+}
+declare type RidePhase = "pickup" | "ride";
+
+declare interface RideState {
+  phase: RidePhase;
+  setPhase: (phase: RidePhase) => void;
+}
+
+declare interface DriverPin {
+  driverId: string;
+  location: {
+    h3Index: string;
+    latitude: number;
+    longitude: number;
+  };
+}
+declare interface DriverPinStore {
+  drivers: DriverPin[];
+  setDrivers: (drivers: DriverPin[]) => void;
+  clearDrivers: () => void;
+}
+
+declare interface PriceCategory {
+  category: string;
+  maxPassengers: number;
+  engineCapacity: number;
+  price: string;
+}
+
+declare interface PricingStore {
+  baseFare: number;
+  distanceCost: number;
+  timeCost: number;
+  surgeMultiplier: string;
+  weatherAdjustment: number;
+  driverRatingAdjustment: string;
+  prices: {
+    category: string;
+    maxPassengers: number;
+    engineCapacity: number;
+    price: string;
+  }[];
+  setBaseFare: (baseFare: number) => void;
+  setDistanceCost: (distanceCost: number) => void;
+  setTimeCost: (timeCost: number) => void;
+  setSurgeMultiplier: (surgeMultiplier: string) => void;
+  setWeatherAdjustment: (weatherAdjustment: number) => void;
+  setDriverRatingAdjustment: (driverRatingAdjustment: string) => void;
+  setPrices: (
+    prices: {
+      category: string;
+      maxPassengers: number;
+      engineCapacity: number;
+      price: string;
+    }[]
+  ) => void;
+  setPricingData: (
+    data: Omit<
+      PricingStore,
+      | "setBaseFare"
+      | "setDistanceCost"
+      | "setTimeCost"
+      | "setSurgeMultiplier"
+      | "setWeatherAdjustment"
+      | "setDriverRatingAdjustment"
+      | "setPrices"
+      | "setPricingData"
+    >
+  ) => void;
 }

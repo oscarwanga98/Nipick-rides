@@ -9,6 +9,11 @@ import {
   CarCategoryStore,
   PaymentMethodStore,
   PaymentMethod,
+  NearDriverStore,
+  SelectedDriverDetailsStore,
+  SelectedDriverDetails,
+  RideState,
+  DriverPinStore,
 } from "@/types/type";
 
 export const useLocationStore = create<LocationStore>((set) => ({
@@ -18,45 +23,56 @@ export const useLocationStore = create<LocationStore>((set) => ({
   destinationLatitude: null,
   destinationLongitude: null,
   destinationAddress: null,
+  driverLatitude: null,
+  driverLongitude: null,
+  driverAddress: null,
 
-  setUserLocation: ({
-    latitude,
-    longitude,
-    address,
-  }: {
-    latitude: number;
-    longitude: number;
-    address: string;
-  }) => {
+  setUserLocation: ({ latitude, longitude, address }) => {
     set(() => ({
       userLatitude: latitude,
       userLongitude: longitude,
       userAddress: address,
     }));
 
-    // if driver is selected and now new location is set, clear the selected driver
+    // Access driver state from useDriverStore
     const { selectedDriver, clearSelectedDriver } = useDriverStore.getState();
-    if (selectedDriver) clearSelectedDriver();
+
+    // If a driver is selected, clear the selection
+    if (selectedDriver) {
+      clearSelectedDriver();
+    }
   },
 
-  setDestinationLocation: ({
-    latitude,
-    longitude,
-    address,
-  }: {
-    latitude: number;
-    longitude: number;
-    address: string;
-  }) => {
+  setDestinationLocation: ({ latitude, longitude, address }) => {
     set(() => ({
       destinationLatitude: latitude,
       destinationLongitude: longitude,
       destinationAddress: address,
     }));
 
-    // if driver is selected and now new location is set, clear the selected driver
+    // Access driver state from useDriverStore
     const { selectedDriver, clearSelectedDriver } = useDriverStore.getState();
-    if (selectedDriver) clearSelectedDriver();
+
+    // If a driver is selected, clear the selection
+    if (selectedDriver) {
+      clearSelectedDriver();
+    }
+  },
+
+  setDriverLocation: ({ latitude, longitude, address }) => {
+    set(() => ({
+      driverLatitude: latitude,
+      driverLongitude: longitude,
+      driverAddress: address,
+    }));
+  },
+
+  clearDriverLocation: () => {
+    set(() => ({
+      driverLatitude: null,
+      driverLongitude: null,
+      driverAddress: null,
+    }));
   },
 }));
 
@@ -128,3 +144,42 @@ export const usePaymentMethodStore = create<PaymentMethodStore>((set) => ({
   // Function to clear the selected payment method
   clearSelectedPaymentMethod: () => set({ selectedPaymentMethod: null }),
 }));
+
+export const useNearDriverStore = create<NearDriverStore>((set) => ({
+  driverIds: [], // Initialize with an empty array
+  addDriverIds: (ids) =>
+    set((state) => ({ driverIds: [...state.driverIds, ...ids] })),
+  setDriverIds: (ids) => set(() => ({ driverIds: ids })),
+  removeDriverId: (id) =>
+    set((state) => ({
+      driverIds: state.driverIds.filter((driverId) => driverId !== id),
+    })),
+  clearDriverIds: () => set(() => ({ driverIds: [] })),
+}));
+
+export const useSelectedDriverDetailsStore = create<SelectedDriverDetailsStore>(
+  (set) => ({
+    selectedDriverDetails: null,
+
+    setSelectedDriverDetails: (driverDetails: SelectedDriverDetails) =>
+      set({ selectedDriverDetails: driverDetails }),
+
+    clearSelectedDriverDetails: () => set({ selectedDriverDetails: null }),
+  })
+);
+
+export const useRidePhaseStore = create<RideState>((set) => ({
+  phase: "pickup",
+  setPhase: (phase) => set({ phase }),
+}));
+
+export const useDriverPinStore = create<DriverPinStore>((set) => ({
+  drivers: [],
+
+  // Action to set drivers in the store
+  setDrivers: (drivers) => set({ drivers }),
+
+  // Action to clear drivers from the store
+  clearDrivers: () => set({ drivers: [] }),
+}));
+

@@ -4,17 +4,24 @@ import { useUser } from "@clerk/clerk-expo";
 import { StripeProvider } from "@stripe/stripe-react-native";
 import { Image, Text, View } from "react-native";
 
+import CustomButton from "@/components/CustomButton";
+import DialerButton from "@/components/DialerButton";
+import LocationUpdater from "@/components/LocationUpdater";
 import Payment from "@/components/Payment";
 import RideLayout from "@/components/RideLayout";
-import CustomButton from "@/components/CustomButton";
 import { icons } from "@/constants";
 import { formatTime } from "@/lib/utils";
-import { useDriverStore, useLocationStore } from "@/store";
+import {
+  useDriverStore,
+  useLocationStore,
+  useSelectedDriverDetailsStore,
+} from "@/store";
 
 const BookRide = () => {
   const { user } = useUser();
   const { userAddress, destinationAddress } = useLocationStore();
   const { drivers, selectedDriver } = useDriverStore();
+  const { selectedDriverDetails } = useSelectedDriverDetailsStore();
 
   const driverDetails = drivers?.filter(
     (driver) => +driver.id === selectedDriver
@@ -28,29 +35,31 @@ const BookRide = () => {
     >
       <RideLayout title="Book Ride">
         <>
+          <LocationUpdater />
           <Text className="text-xl font-JakartaSemiBold mb-3">
             Ride Information
           </Text>
 
           <View className="flex flex-col w-full items-center justify-center mt-10">
             <Image
-              source={{ uri: driverDetails?.profile_image_url }}
+              source={{ uri: selectedDriverDetails?.profile_image_url }}
               className="w-28 h-28 rounded-full"
             />
 
             <View className="flex flex-row items-center justify-center mt-5 space-x-2">
               <Text className="text-lg font-JakartaSemiBold">
-                {driverDetails?.title}
+                {selectedDriverDetails?.title}
               </Text>
 
               <View className="flex flex-row items-center space-x-0.5">
+                {/* modify these ad find its use */}
                 <Image
                   source={icons.star}
                   className="w-5 h-5"
                   resizeMode="contain"
                 />
                 <Text className="text-lg font-JakartaRegular">
-                  {driverDetails?.rating}
+                  {selectedDriverDetails?.rating}
                 </Text>
               </View>
             </View>
@@ -60,26 +69,34 @@ const BookRide = () => {
             <View className="flex flex-row items-center justify-between w-full border-b border-white py-3">
               <Text className="text-lg font-JakartaRegular">Ride Price</Text>
               <Text className="text-lg font-JakartaRegular text-[#0CC25F]">
-                ${driverDetails?.price}
+                {/* work  from pricing service */}KSH
+                {selectedDriverDetails?.price}
               </Text>
             </View>
 
             <View className="flex flex-row items-center justify-between w-full border-b border-white py-3">
               <Text className="text-lg font-JakartaRegular">Pickup Time</Text>
               <Text className="text-lg font-JakartaRegular">
+                {/* work  from pricing service */}
                 {formatTime(driverDetails?.time!)}
               </Text>
             </View>
 
-            <View className="flex flex-row items-center justify-between w-full py-3">
+            <View className="flex flex-row items-center justify-between w-full border-b border-white py-3">
               <Text className="text-lg font-JakartaRegular">Car Seats</Text>
               <Text className="text-lg font-JakartaRegular">
-                {driverDetails?.car_seats}
+                {selectedDriverDetails?.car_seats}
               </Text>
+            </View>
+
+            <View className="flex flex-row items-center justify-between w-full py-3">
+              <Text className="text-lg font-JakartaRegular">Phone Number</Text>
+              <DialerButton phoneNumber="0719788033" />
+              
             </View>
           </View>
 
-          <View className="flex flex-col w-full items-start justify-center mt-5">
+          <View className="flex flex-col w-full items-start justify-center mt-5 mb-5">
             <View className="flex flex-row items-center justify-start mt-3 border-t border-b border-general-700 w-full py-3">
               <Image source={icons.to} className="w-6 h-6" />
               <Text className="text-lg font-JakartaRegular ml-2">
@@ -87,7 +104,7 @@ const BookRide = () => {
               </Text>
             </View>
 
-            <View className="flex flex-row items-center justify-start border-b border-general-700 w-full py-3">
+            <View className="flex flex-row items-center justify-start border-b border-general-700 w-full py-3 px-">
               <Image source={icons.point} className="w-6 h-6" />
               <Text className="text-lg font-JakartaRegular ml-2">
                 {destinationAddress}

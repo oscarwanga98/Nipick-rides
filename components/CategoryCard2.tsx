@@ -4,7 +4,7 @@ import { icons } from "@/constants";
 import { CategoryCard2Props } from "@/types/type";
 const CategoryCard2 = ({ item, setSelected, selected }: CategoryCard2Props) => {
   const renderCategoryIcon = () => {
-    switch (item.name.toLowerCase()) {
+    switch (item.category.toLowerCase()) {
       case "economy":
         return (
           <Image source={icons.economy} style={{ width: 40, height: 40 }} />
@@ -39,18 +39,22 @@ const CategoryCard2 = ({ item, setSelected, selected }: CategoryCard2Props) => {
       {renderCategoryIcon()}
       <View className="flex-1 flex flex-col items-start justify-center mx-3 ">
         <View className="flex flex-row items-center justify-start mb-1">
-          <Text className="text-lg font-JakartaRegular">{item.name}</Text>
+          <Text className="text-lg font-JakartaRegular">{item.category}</Text>
 
           <View className="flex flex-row items-center space-x-1 ml-2">
             <Image source={icons.person} className="w-3.5 h-3.5" />
-            <Text className="text-sm font-JakartaRegular">3 Passanger(s)</Text>
+            <Text className="text-sm font-JakartaRegular">
+              {item.maxPassengers} Passanger(s)
+            </Text>
           </View>
         </View>
 
         <View className="flex flex-row items-center justify-start ">
           <View className="flex flex-row items-center">
             <Image source={icons.map} className="w-4 h-4" />
-            <Text className="text-sm font-JakartaRegular ml-1">5,000 KSH</Text>
+            <Text className="text-sm font-JakartaRegular ml-1">
+              {item.price} KSH
+            </Text>
           </View>
 
           <Text className="text-sm font-JakartaRegular text-general-800 mx-1">
