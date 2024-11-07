@@ -1,7 +1,9 @@
+import { useEffect } from "react";
 import { router } from "expo-router";
 
 import { useUser } from "@clerk/clerk-expo";
 import { StripeProvider } from "@stripe/stripe-react-native";
+import axios from "axios";
 import { Image, Text, View } from "react-native";
 
 import CustomButton from "@/components/CustomButton";
@@ -16,17 +18,131 @@ import {
   useLocationStore,
   useSelectedDriverDetailsStore,
 } from "@/store";
+import { SelectedDriverDetails } from "@/types/type";
 
 const BookRide = () => {
-  const { user } = useUser();
-  const { userAddress, destinationAddress } = useLocationStore();
+  const { userAddress, destinationAddress, userLatitude, userLongitude } =
+    useLocationStore();
   const { drivers, selectedDriver } = useDriverStore();
   const { selectedDriverDetails } = useSelectedDriverDetailsStore();
 
   const driverDetails = drivers?.filter(
     (driver) => +driver.id === selectedDriver
   )[0];
+  //double caal for matched driver detials
+  const fetchDriverData = async (latitude: number, longitude: number) => {
+    try {
+      console.log("Initiating first API call to find driver...");
+      const response = await axios.get(
+        `http://192.168.0.102:8081/(api)/drivers/find-driver`,
+        {
+          params: {
+            latitude: latitude,
+            longitude: longitude,
+          },
+        }
+      );
 
+      // Extract driver data from the first response
+      const driverData = response.data.data;
+      console.log("Driver data received:", driverData);
+
+      // Log specific data points
+      console.log("THIS IS THE DATA WE WANT :::", driverData);
+
+      // Check if driverId exists
+      if (!driverData.driverId) {
+        throw new Error("Driver ID not found in response");
+      }
+
+      // Make a second call to Neon SQL database using clerk_id
+      const driverDetailsResponse = await axios.get(
+        `http://192.168.0.102:8081/(api)/drivers/driver-dits`,
+        {
+          params: {
+            clerk_id: driverData.driverId,
+          },
+        }
+      );
+
+      // Log the second response data
+      const detailedDriverData = driverDetailsResponse.data.data[0]; // Assuming the response has a data array
+      console.log("Driver details from Neon SQL:", detailedDriverData);
+
+      // Construct SelectedDriverDetails object
+      const driverDetails: SelectedDriverDetails = {
+        car_image_url: detailedDriverData.car_image_url,
+        car_seats: detailedDriverData.car_seats,
+        clerk_id: detailedDriverData.clerk_id,
+        first_name: detailedDriverData.first_name,
+        id: detailedDriverData.id,
+        last_name: detailedDriverData.last_name,
+        profile_image_url: detailedDriverData.profile_image_url,
+        rating: detailedDriverData.rating,
+      };
+
+      // Update the store with the driver details
+      const { setSelectedDriverDetails } =
+        useSelectedDriverDetailsStore.getState();
+      setSelectedDriverDetails(driverDetails);
+
+      console.log("Driver details updated in the store:", driverDetails);
+    } catch (error) {
+      console.error("Error fetching driver data:", error);
+    }
+  };
+  // const fetchDriverData = async (latitude: number, longitude: number) => {
+  //   try {
+  //     console.log("Initiating first API call to find driver...");
+  //     const response = await axios.get(
+  //       `http://192.168.0.102:8081/(api)/drivers/find-driver`,
+  //       {
+  //         params: {
+  //           latitude: latitude,
+  //           longitude: longitude,
+  //         },
+  //       }
+  //     );
+
+  //     // Extract driver data from the first response
+  //     const driverData = response.data.data;
+  //     console.log("Driver data received:", driverData);
+
+  //     // Log specific data points
+  //     console.log("THIS IS THE DATA WE WANT :::", driverData);
+
+  //     // Check if driverId exists
+  //     if (!driverData.driverId) {
+  //       throw new Error("Driver ID not found in response");
+  //     }
+
+  //     // Make a second call to Neon SQL database using driverId
+  //     const driverDetailsResponse = await axios.get(
+  //       `http://192.168.0.102:8081/(api)/drivers/driver-dits`,
+  //       {
+  //         params: {
+  //           clerk_id: driverData.driverId,
+  //         },
+  //       }
+  //     );
+
+  //     // Log the second response data
+  //     console.log("Driver details from Neon SQL:", driverDetailsResponse.data);
+
+  //     // Return combined data
+  //     return {
+  //       ...driverData,
+  //       additionalDetails: driverDetailsResponse.data,
+  //     };
+  //   } catch (error) {
+  //     console.error("Error fetching driver data:", error);
+  //   }
+  // };
+
+  useEffect(() => {
+    // Call the function with sample coordinates (replace with dynamic location in a real app)
+    fetchDriverData(userLatitude || -1.2709027, userLongitude || 36.8925431);
+  }, [userLatitude, userLongitude]);
   return (
     <StripeProvider
       publishableKey={process.env.EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY!}
@@ -91,8 +207,8 @@ const BookRide = () => {
 
             <View className="flex flex-row items-center justify-between w-full py-3">
               <Text className="text-lg font-JakartaRegular">Phone Number</Text>
-              <DialerButton phoneNumber="0719788033" />
-              
+              {/* <DialerButton phoneNumber="0719788033" /> */}
+              <Text>{selectedDriverDetails?.first_name}</Text>
             </View>
           </View>
 
@@ -120,7 +236,7 @@ const BookRide = () => {
             rideTime={driverDetails?.time!}
           /> */}
           <CustomButton
-            title="Finish"
+            title="Request"
             onPress={() => router.push("/(root)/ride-mode")}
           />
         </>
