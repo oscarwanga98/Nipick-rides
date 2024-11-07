@@ -169,7 +169,7 @@ export const useSelectedDriverDetailsStore = create<SelectedDriverDetailsStore>(
 );
 
 export const useRidePhaseStore = create<RideState>((set) => ({
-  phase: "pickup",
+  phase: "request",
   setPhase: (phase) => set({ phase }),
 }));
 

@@ -17,6 +17,7 @@ import {
   useDriverStore,
   useLocationStore,
   useSelectedDriverDetailsStore,
+  useRidePhaseStore,
 } from "@/store";
 import { SelectedDriverDetails } from "@/types/type";
 
@@ -25,7 +26,7 @@ const BookRide = () => {
     useLocationStore();
   const { drivers, selectedDriver } = useDriverStore();
   const { selectedDriverDetails } = useSelectedDriverDetailsStore();
-
+  const { setPhase } = useRidePhaseStore();
   const driverDetails = drivers?.filter(
     (driver) => +driver.id === selectedDriver
   )[0];
@@ -237,7 +238,10 @@ const BookRide = () => {
           /> */}
           <CustomButton
             title="Request"
-            onPress={() => router.push("/(root)/ride-mode")}
+            onPress={() => {
+              setPhase("pick-up");
+              router.push("/(root)/ride-mode");
+            }}
           />
         </>
       </RideLayout>

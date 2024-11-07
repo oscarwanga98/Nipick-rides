@@ -242,7 +242,7 @@ declare interface RideStatusState {
   isRideStarted: boolean;
   setRideStarted: (started: boolean) => void;
 }
-declare type RidePhase = "pickup" | "ride";
+declare type RidePhase = "request" | "pick-up" | "ride-mode" | "finish";
 
 declare interface RideState {
   phase: RidePhase;
