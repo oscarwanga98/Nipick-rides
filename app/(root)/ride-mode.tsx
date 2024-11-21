@@ -6,7 +6,7 @@ import DialerButton from "@/components/DialerButton";
 import RideLayout from "@/components/RideLayout";
 import { useLocationStore } from "@/store";
 const RideMode = () => {
-  const {setDriverLocation} = useLocationStore();
+  const { setDriverLocation } = useLocationStore();
   return (
     <RideLayout snapPoints={["35%"]} title={"Ride Mode"}>
       <View className="mx-5 mt-3">

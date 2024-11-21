@@ -182,4 +182,3 @@ export const useDriverPinStore = create<DriverPinStore>((set) => ({
   // Action to clear drivers from the store
   clearDrivers: () => set({ drivers: [] }),
 }));
-

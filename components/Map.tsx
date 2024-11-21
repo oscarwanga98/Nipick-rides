@@ -22,7 +22,7 @@ const Map = () => {
     destinationLatitude,
     destinationLongitude,
   } = useLocationStore();
-  const { selectedDriver, setDrivers } = useDriverStore();
+  const { selectedDriiver, setDrivers } = useDriverStore();
   const { drivers } = useDriverPinStore();
 
   // const { data: drivers, loading, error } = useFetch<Driver[]>("/(api)/driver");

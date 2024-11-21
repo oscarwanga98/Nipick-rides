@@ -72,7 +72,7 @@ const Home = () => {
         try {
           console.log("begin the call");
           const response = await axios.get(
-            `http://localhost:3000/nearby-drivers?latitude=${location.coords.latitude}&longitude=${location.coords.longitude}`
+            `https://driver-matching-api-server.onrender.com/nearby-drivers?latitude=${location.coords.latitude}&longitude=${location.coords.longitude}`
           );
           const driversData = response.data;
           console.log(driversData)

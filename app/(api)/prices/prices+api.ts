@@ -44,7 +44,7 @@ export async function POST(request: Request) {
     };
 
     // Make a request to the calculate-prices endpoint
-    const calculatePricesUrl = `https://pricing-trinity-1.onrender.com/calculate-prices`;
+    const calculatePricesUrl = `https://pricing-trinity-api.onrender.com/calculate-prices`;
     const response = await axios.post(calculatePricesUrl, payload);
 
     // Return the calculated prices data

@@ -16,7 +16,8 @@ export async function GET(request: Request) {
     }
 
     // Define the find-driver endpoint
-    const findDriverUrl = `http://localhost:3000/find-driver?latitude=${latitude}&longitude=${longitude}`;
+    // const findDriverUrl = `http://localhost:3000/find-driver?latitude=${latitude}&longitude=${longitude}`;
+    const findDriverUrl = `https://driver-matching-api-server.onrender.com/find-driver?latitude=${latitude}&longitude=${longitude}`;
 
     // Make a GET request to fetch the best driver’s data
     const response = await axios.get(findDriverUrl);
