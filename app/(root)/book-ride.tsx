@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { router } from "expo-router";
 
 import { useUser } from "@clerk/clerk-expo";
+import { useAuth } from "@clerk/clerk-expo";
 import { StripeProvider } from "@stripe/stripe-react-native";
 import axios from "axios";
 import { Image, Text, View } from "react-native";
@@ -21,7 +22,28 @@ import {
 } from "@/store";
 import { SelectedDriverDetails } from "@/types/type";
 
+import { initializeSocket, fetchToken } from "@/services/socketService";
+import { useTokenStore } from "@/store/token";
+
 const BookRide = () => {
+  const { accessToken, refreshToken } = useTokenStore();
+  const { userId } = useAuth();
+
+  useEffect(() => {
+    if (accessToken) {
+      console.log("Access Token:", accessToken);
+    }
+  }, [accessToken]);
+  const handleConnect = async (userId: string) => {
+    try {
+      // setStatus("Connecting...");
+      await initializeSocket(userId);
+      // setStatus("Connected to WebSocket server");
+    } catch (error) {
+      // setStatus("Connection failed");
+      console.error(error);
+    }
+  };
   const { userAddress, destinationAddress, userLatitude, userLongitude } =
     useLocationStore();
   const { drivers, selectedDriver } = useDriverStore();
@@ -240,6 +262,7 @@ const BookRide = () => {
             title="Request"
             onPress={() => {
               setPhase("pick-up");
+              handleConnect(userId || "");
               router.push("/(root)/ride-mode");
             }}
           />

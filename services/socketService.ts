@@ -1,5 +1,8 @@
+// tokenManager.ts
 import axios from "axios";
 import { io, Socket } from "socket.io-client";
+
+import { useTokenStore } from "@/store/token";
 
 // Configurations
 const SOCKET_SERVER_URL = "https://websocket-location-server.onrender.com";
@@ -11,22 +14,32 @@ const REFRESH_TOKEN_API_URL =
 let socket: Socket | null = null;
 
 // Token management
-const fetchToken = async (userId: string): Promise<string> => {
+export const fetchToken = async (userId: string): Promise<void> => {
   try {
     const response = await axios.post(TOKEN_API_URL, { userId });
-    console.log(response.data);
-    return response.data.token;
+    const { token, refreshToken } = response.data;
+
+    // Store tokens in Zustand store
+    const { setAccessToken, setRefreshToken } = useTokenStore.getState();
+    setAccessToken(token);
+    setRefreshToken(refreshToken);
   } catch (error) {
     console.error("Error fetching token:", error);
     throw new Error("Failed to obtain JWT token");
   }
 };
 
-const refreshAccessToken = async (refreshToken: string): Promise<string> => {
+export const refreshAccessToken = async (): Promise<void> => {
   try {
+    const { refreshToken } = useTokenStore.getState();
+    if (!refreshToken) throw new Error("No refresh token available");
+
     const response = await axios.post(REFRESH_TOKEN_API_URL, { refreshToken });
-    console.log("Refreshed token:", response.data);
-    return response.data.token;
+    const { token } = response.data;
+
+    // Update access token in Zustand store
+    const { setAccessToken } = useTokenStore.getState();
+    setAccessToken(token);
   } catch (error) {
     console.error("Error refreshing token:", error);
     throw new Error("Failed to refresh JWT token");
@@ -34,14 +47,17 @@ const refreshAccessToken = async (refreshToken: string): Promise<string> => {
 };
 
 // Socket initialization
-const initializeSocket = async (userId: string): Promise<void> => {
+export const initializeSocket = async (userId: string): Promise<void> => {
   try {
-    const token = await fetchToken(userId);
+    await fetchToken(userId);
+
+    const { accessToken } = useTokenStore.getState();
+    if (!accessToken) throw new Error("No access token available");
 
     if (!socket) {
       socket = io(SOCKET_SERVER_URL, {
         extraHeaders: {
-          authorization: token,
+          authorization: accessToken,
         },
         query: {
           clientType: "rider",
@@ -61,11 +77,11 @@ const initializeSocket = async (userId: string): Promise<void> => {
       });
     }
   } catch (error) {
-    console.error("Initialization failed:", error);
+    console.error("Socket initialization failed:", error);
   }
 };
 
-const getSocket = (): Socket | null => {
+export const getSocket = (): Socket | null => {
   if (!socket) {
     console.warn(
       "Socket has not been initialized. Call initializeSocket first."
@@ -73,7 +89,3 @@ const getSocket = (): Socket | null => {
   }
   return socket;
 };
-
-// Exported functions for token and socket management
-export { initializeSocket, getSocket };
-// fetchToken, refreshAccessToken,

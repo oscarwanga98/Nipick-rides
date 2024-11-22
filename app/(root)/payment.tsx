@@ -37,7 +37,7 @@ const Payment = () => {
             setPaymentMethods={() => selectPaymentMethod(item)}
           />
         )}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item) => item.id.toString()} 
         ListFooterComponent={() => (
           <View className="mx-5 mt-4">
             <CustomButton
