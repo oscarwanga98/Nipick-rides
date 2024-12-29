@@ -89,3 +89,28 @@ export const getSocket = (): Socket | null => {
   }
   return socket;
 };
+
+// Function to send a message to the WebSocket server
+export const sendMessage = (event: string, payload: any): void => {
+  if (!socket) {
+    console.warn("Socket not initialized. Call initializeSocket first.");
+    return;
+  }
+
+  socket.emit(event, payload, (response: any) => {
+    console.log(`Response from server for event "${event}":`, response);
+  });
+};
+
+// Function to listen for a specific event from the WebSocket server
+export const listenToEvent = (
+  event: string,
+  callback: (data: any) => void
+): void => {
+  if (!socket) {
+    console.warn("Socket not initialized. Call initializeSocket first.");
+    return;
+  }
+
+  socket.on(event, callback);
+};
