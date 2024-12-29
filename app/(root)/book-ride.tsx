@@ -22,7 +22,11 @@ import {
 } from "@/store";
 import { SelectedDriverDetails } from "@/types/type";
 
-import { initializeSocket, fetchToken } from "@/services/socketService";
+import {
+  initializeSocket,
+  fetchToken,
+  sendMessage,
+} from "@/services/socketService";
 import { useTokenStore } from "@/store/token";
 
 const BookRide = () => {
