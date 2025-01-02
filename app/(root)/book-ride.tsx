@@ -8,9 +8,7 @@ import axios from "axios";
 import { Image, Text, View } from "react-native";
 
 import CustomButton from "@/components/CustomButton";
-import DialerButton from "@/components/DialerButton";
 import LocationUpdater from "@/components/LocationUpdater";
-import Payment from "@/components/Payment";
 import RideLayout from "@/components/RideLayout";
 import { icons } from "@/constants";
 import { formatTime } from "@/lib/utils";
@@ -26,6 +24,7 @@ import {
   initializeSocket,
   fetchToken,
   sendMessage,
+  listenToEvent,
 } from "@/services/socketService";
 import { useTokenStore } from "@/store/token";
 
@@ -38,6 +37,7 @@ const BookRide = () => {
       console.log("Access Token:", accessToken);
     }
   }, [accessToken]);
+
   const handleConnect = async (userId: string) => {
     try {
       // setStatus("Connecting...");
@@ -48,6 +48,15 @@ const BookRide = () => {
       console.error(error);
     }
   };
+  const requestRide = () => {
+    sendMessage("rider-request", {
+      riderId: "rider001",
+      driverId: "user_2mKgwoeCAE2J8IiD3I5DjGX4FrP",
+      latitude: -1.2709027,
+      longitude: 36.8925431,
+    });
+  };
+
   const { userAddress, destinationAddress, userLatitude, userLongitude } =
     useLocationStore();
   const { drivers, selectedDriver } = useDriverStore();
@@ -267,6 +276,7 @@ const BookRide = () => {
             onPress={() => {
               setPhase("pick-up");
               handleConnect(userId || "");
+              requestRide();
               router.push("/(root)/ride-mode");
             }}
           />
