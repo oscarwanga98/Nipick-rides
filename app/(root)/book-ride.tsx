@@ -55,6 +55,7 @@ const BookRide = () => {
       latitude: -1.2709027,
       longitude: 36.8925431,
     });
+    console.log('rider001 +user_2mKgwoeCAE2J8IiD3I5DjGX4FrP')
   };
 
   const { userAddress, destinationAddress, userLatitude, userLongitude } =
